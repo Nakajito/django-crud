@@ -1,7 +1,8 @@
 <h1>Singup</h1>
-
+{{error}}
 <form action="/singup/" method="POST">
     {% csrf_token %}
     {{form.as_p}}
     <button>Singup</button>
 </form>
+

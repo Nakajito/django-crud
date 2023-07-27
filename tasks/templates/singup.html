@@ -2,11 +2,9 @@
 
 {% block content %}
     <h1>Singup</h1>
-    
-    <p> {{error}} </p>
-    
     <form action="/singup/" method="POST">
         {% csrf_token %}
+        <p> {{error}} </p>
         {{form.as_p}}
         <button>Singup</button>
     </form>

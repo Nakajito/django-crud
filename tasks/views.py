@@ -12,6 +12,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 # importar el formulario para ingresar tareas
 from .forms import TaskForm
+# Acceder al modelo de la base de datos
+from .models import Task
 
 # definimos la función para mosntrar eh home
 def home(request):
@@ -56,7 +58,12 @@ def singup(request):
         })
 
 def tasks(request):
-    return render(request, 'tasks.html')
+    # Obtenemos todos los elementos de la DB tasks = Task.objects.all()
+    # usamos filter para mostar los datos de un usuarios especifico y que no esten compmletadas
+    tasks = Task.objects.filter(user=request.user, date_completed__isnull=True)
+    return render(request, 'tasks.html',{
+        'tasks' : tasks
+    })
 
 def create_task(request):
     if request.method == 'GET':

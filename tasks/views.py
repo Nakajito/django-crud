@@ -1,5 +1,5 @@
 # importamos render para mostrar una pagina web
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # Utilizar clase para crear formularios
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # Permite guardar usuarios en la DB
@@ -64,6 +64,32 @@ def tasks(request):
     return render(request, 'tasks.html',{
         'tasks' : tasks
     })
+
+def task_detail(request, task_id):
+    if request.method == 'GET':
+        task = get_object_or_404(Task, pk = task_id, user = request.user)
+        # Permite rellenar el formulario con los datos guardados
+        form = TaskForm(instance=task)
+        return render(request, 'task_detail.html',{
+                'task'  : task,
+                'form' : form
+            })
+    else:
+        try:
+            task = get_object_or_404(Task, pk = task_id, user = request.user)
+
+            form = TaskForm(instance=task)
+            return render(request, 'task_detail.html',{
+                'task'  : task,
+                'form' : form
+            })
+        except ValueError:
+            return render(request, 'task_detail.html', {
+                'task' : task,
+                'form' : form,
+                'error' : "Error actualizando"
+            })
+        
 
 def create_task(request):
     if request.method == 'GET':

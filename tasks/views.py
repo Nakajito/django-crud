@@ -14,6 +14,8 @@ from django.db import IntegrityError
 from .forms import TaskForm
 # Acceder al modelo de la base de datos
 from .models import Task
+# Para trabajar con time zone
+from django.utils import timezone
 
 # definimos la función para mosntrar eh home
 def home(request):
@@ -77,7 +79,6 @@ def task_detail(request, task_id):
     else:
         try:
             task = get_object_or_404(Task, pk = task_id, user = request.user)
-
             form = TaskForm(instance=task)
             return render(request, 'task_detail.html',{
                 'task'  : task,
@@ -89,7 +90,19 @@ def task_detail(request, task_id):
                 'form' : form,
                 'error' : "Error actualizando"
             })
-        
+
+def complete_task(request, task_id):
+    task = get_object_or_404(Task, pk = task_id, user = request.user)
+    if request.method == 'POST':
+        task.date_completed = timezone.now()
+        task.save()
+        return redirect('tasks')
+
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, pk = task_id, user = request.user)
+    if request.method == 'POST':
+        task.delete()
+        return redirect('tasks')
 
 def create_task(request):
     if request.method == 'GET':

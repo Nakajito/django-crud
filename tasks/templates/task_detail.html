@@ -11,4 +11,16 @@
         <button type="submit">Update</button>
     </form>
 
+    <form action="{% url 'complete_task' task.id %}" method="post">
+        {% csrf_token %}
+
+        <button>Complete</button>
+    </form>
+
+    <form action="{% url 'delete_task' task.id %}" method="post">
+        {% csrf_token %}
+
+        <button>Delete</button>
+    </form>
+
 {% endblock content %}

@@ -16,6 +16,8 @@ from .forms import TaskForm
 from .models import Task
 # Para trabajar con time zone
 from django.utils import timezone
+# proteger las urls de accesos no autorizados
+from django.contrib.auth.decorators import login_required
 
 # definimos la función para mosntrar eh home
 def home(request):
@@ -56,6 +58,8 @@ def singup(request):
             'error' : 'Las contraseñas no coinciden'
         })
 
+# protege el acceso no autorizado
+@login_required
 def tasks(request):
     # Obtenemos todos los elementos de la DB tasks = Task.objects.all()
     # usamos filter para mostar los datos de un usuarios especifico y que no esten compmletadas
@@ -63,13 +67,15 @@ def tasks(request):
     return render(request, 'tasks.html',{
         'tasks' : tasks
     })
-    
+
+@login_required
 def tasks_completed(request):
     tasks = Task.objects.filter(user=request.user, date_completed__isnull=False).order_by('-date_completed')
     return render(request, 'tasks.html',{
         'tasks' : tasks
     })
 
+@login_required
 def task_detail(request, task_id):
     if request.method == 'GET':
         task = get_object_or_404(Task, pk = task_id, user = request.user)
@@ -94,6 +100,7 @@ def task_detail(request, task_id):
                 'error' : "Error actualizando"
             })
 
+@login_required
 def complete_task(request, task_id):
     task = get_object_or_404(Task, pk = task_id, user = request.user)
     if request.method == 'POST':
@@ -101,12 +108,14 @@ def complete_task(request, task_id):
         task.save()
         return redirect('tasks')
 
+@login_required
 def delete_task(request, task_id):
     task = get_object_or_404(Task, pk = task_id, user = request.user)
     if request.method == 'POST':
         task.delete()
         return redirect('tasks')
 
+@login_required
 def create_task(request):
     if request.method == 'GET':
         return render(request, 'create_task.html',{
@@ -124,7 +133,8 @@ def create_task(request):
                 'form' : TaskForm,
                 'error' : 'Proporciona datos validos'
                 })
-        
+
+@login_required
 def singout(request):
     logout(request)
     return redirect('home')

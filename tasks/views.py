@@ -21,9 +21,6 @@ from django.utils import timezone
 def home(request):
     return render(request, 'home.html')
 
-# Definimos la función para el singup y validar el usuario, contraseña y guardar en la base de datos, primero se deben de realizar las migraciones con <python manage.py migrate>
-
-
 def singup(request):
 
     # Si se accede con el método GET se muestra el formulario
@@ -63,6 +60,12 @@ def tasks(request):
     # Obtenemos todos los elementos de la DB tasks = Task.objects.all()
     # usamos filter para mostar los datos de un usuarios especifico y que no esten compmletadas
     tasks = Task.objects.filter(user=request.user, date_completed__isnull=True)
+    return render(request, 'tasks.html',{
+        'tasks' : tasks
+    })
+    
+def tasks_completed(request):
+    tasks = Task.objects.filter(user=request.user, date_completed__isnull=False).order_by('-date_completed')
     return render(request, 'tasks.html',{
         'tasks' : tasks
     })

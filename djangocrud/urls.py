@@ -31,3 +31,4 @@ urlpatterns = [
     path("logout/", views.singout, name='logout'),
     path("signin/", views.signin, name='signin'),
 ]
+ 

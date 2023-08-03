@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/venv,windows,visualstudiocode,git,linux,macos,python,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=venv,windows,visualstudiocode,git,linux,macos,python,pycharm
 
+db.sqlite3
+
 ### Git ###
 # Created by git for backups. To disable backups in Git:
 # $ git config --global mergetool.keepBackup false
